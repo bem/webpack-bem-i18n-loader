@@ -52,13 +52,13 @@ function toPlural(arr, pathToPlural) {
     };
 
     return `function(params) {
-        var plural = require('${pathToPlural}');
-        return plural({
-            count: params.count,
-            one: '${plurals.one}',
-            some: '${plurals.some}',
-            many: '${plurals.many}',
-            none: '${plurals.none}'
-        });
-    }`;
+            var plural = require('${pathToPlural}');
+            return plural({
+                count: params.count,
+                one: '${plurals.one}',
+                some: '${plurals.some}',
+                many: '${plurals.many}',
+                none: '${plurals.none}'
+            });
+        }`;
 }
