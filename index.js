@@ -2,54 +2,46 @@
 'use strict';
 
 const path = require('path');
-    // bn = require('@bem/naming'),
-    // BemCell = require('@bem/cell'),
-    // BemEntityName = require('@bem/entity-name'),
-    // bemFs = require('@bem/fs-scheme')(),
-    // bemImport = require('bem-import'),
-    // falafel = require('falafel'),
-    // vow = require('vow'),
-    // vowFs = require('vow-fs'),
-const loaderUtils = require('loader-utils');
+
+const falafel = require('falafel');
+const nodeEval = require('node-eval');
 
 module.exports = function(source) {
-    return source;
+    this.cacheable && this.cacheable();
+
+    const callback = this.async();
+    const result = falafel(source, node => {
+        if (
+            node.type === 'Property' &&
+            node.value.type === 'ArrayExpression'
+        ) {
+            const pathToPlural = path.resolve(this.resourcePath, __dirname, 'plural', path.basename(res));
+            const newV = toPlural(nodeEval(node.value.source()), pathToPlural);
+            node.value.update(newV);
+        }
+    });
+
+
+    callback(null, (result.toString() + '// HELLO '));
 };
 
-// module.exports = function(source) {
-//     this.cacheable && this.cacheable();
-// 
-//     console.log('^____________^');
-// 
-//     const callback = this.async(),
-//         options = this.options.bemLoader || loaderUtils.parseQuery(this.query);
-//         // ,
-//         // levels = options.levels,
-//         // techMap = options.techMap || (options.techs || ['js']).reduce((acc, tech) => {
-//         //     acc[tech] = (acc[tech] || []).concat(tech);
-//         //     return acc;
-//         // }, {}),
-//         // fastTechMap = Object.keys(techMap).reduce((acc, tech) => {
-//         //     techMap[tech].forEach(_tech => {
-//         //         acc[_tech] = tech;
-//         //     });
-//         //     return acc;
-//         // }, {}),
-//         // defaultTechs = Object.keys(techMap).reduce((acc, tech) => {
-//         //     return acc.concat(techMap[tech])
-//         // }, []),
-//         // generators = Object.assign(require('./generators'), options.customGenerators),
-//         // allPromises = [],
-//         // namingOptions = options.naming || 'react',
-//         // bemNaming = bn(namingOptions);
-// 
-// callback(null, (source + '// HELLO '));
-//     //     const result = source;
-// 
-//     // vow.all(allPromises)
-//     //     .then(() => {
-//     //         callback(null, result.toString());
-//     //     })
-//     //     .catch(callback);
-// };
-// 
+
+function toPlural(arr, pathToPlural) {
+    const plurals = {
+        one: arr[0],
+        some: arr[1],
+        many: arr[2],
+        none: arr[3]
+    };
+
+    return `function(params) {
+        var plural = require('${pathToPlural}');
+        return plural({
+            count: params.count,
+            one: '${plurals.one}',
+            some: '${plurals.some}',
+            many: '${plurals.many}',
+            none: '${plurals.none}'
+        });
+    }`;
+}
