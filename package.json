@@ -1,0 +1,25 @@
+{
+  "name": "webpack-bem-i18n-loader",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yeti-or/webpack-bem-i18n-loader.git"
+  },
+  "keywords": [
+    "bem",
+    "i18n",
+    "webpack",
+    "loader"
+  ],
+  "author": "Vasiliy Loginevskiy <yeti.or@gmail.com>",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/Yeti-or/webpack-bem-i18n-loader/issues"
+  },
+  "homepage": "https://github.com/Yeti-or/webpack-bem-i18n-loader#readme"
+}
