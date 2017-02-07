@@ -33,14 +33,16 @@ module.exports = function(source) {
     callback(null, result.toString());
 };
 
-// TODO: improve case ` '' + params[""] + '' `
 function toParam(str) {
-    const rpl = str => str.replace(paramReg, (_, captured) => {
-        return `' + params['${captured}'] + '`
-    });
+    const kk = str => str
+        .split(paramReg)
+        .map((s, i) => Boolean(s) && (i === 1 ? `params['${s}']` : `'${s}'`))
+        .filter(Boolean)
+        .join(', ');
+
     return `function(params) {
-        return '${rpl(str)}';
-    }`;
+            return [${kk(str)}];
+        }`;
 }
 
 function toPlural(arr, pathToPlural) {
