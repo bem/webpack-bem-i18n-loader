@@ -18,6 +18,10 @@
   ],
   "author": "Vasiliy Loginevskiy <yeti.or@gmail.com>",
   "license": "MPL-2.0",
+  "files": [
+    "index.js",
+    "plural/"
+  ],
   "bugs": {
     "url": "https://github.com/Yeti-or/webpack-bem-i18n-loader/issues"
   },
