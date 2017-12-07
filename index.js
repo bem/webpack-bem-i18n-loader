@@ -6,7 +6,7 @@ const path = require('path');
 const falafel = require('falafel');
 const nodeEval = require('node-eval');
 
-const paramReg = /<i18n:param>(.*?)<\/i18n:param>/;
+const paramRegExp = /<i18n:param>(.*?)<\/i18n:param>/;
 
 module.exports = function(source) {
     this.cacheable && this.cacheable();
@@ -24,7 +24,7 @@ module.exports = function(source) {
         } else if (
             node.type === 'Property' &&
             node.value.type === 'Literal' &&
-            node.value.value.match(paramReg)
+            node.value.value.match(paramRegExp)
         ) {
             node.value.update(toParam(node.value.value));
         }
@@ -33,15 +33,22 @@ module.exports = function(source) {
     callback(null, result.toString());
 };
 
-function toParam(str) {
-    const kk = str => str
-        .split(paramReg)
-        .map((s, i) => Boolean(s) && (i === 1 ? `params['${s}']` : `'${s}'`))
-        .filter(Boolean)
+function toParam(string) {
+    const result = string
+        .split(paramRegExp)
+        .reduce((acc, chunk, index) => {
+            if (chunk) {
+                const value = index % 2 !== 0
+                    ? `params['${chunk}']`
+                    : `'${chunk}'`;
+                acc.push(value);
+            }
+            return acc;
+        }, [])
         .join(', ');
 
     return `function(params) {
-            return [${kk(str)}];
+            return [${result}];
         }`;
 }
 
