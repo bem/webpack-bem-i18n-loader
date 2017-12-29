@@ -38,9 +38,10 @@ function toParam(string) {
         .split(paramRegExp)
         .reduce((acc, chunk, index) => {
             if (chunk) {
+                const escapedChunk = JSON.stringify(chunk);
                 const value = index % 2 !== 0
-                    ? `params['${chunk}']`
-                    : `'${chunk}'`;
+                    ? `params[${escapedChunk}]`
+                    : escapedChunk;
                 acc.push(value);
             }
             return acc;
