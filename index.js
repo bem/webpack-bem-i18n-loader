@@ -18,7 +18,9 @@ module.exports = function(source) {
             node.value.type === 'ArrayExpression'
         ) {
             const resPath = this.resourcePath;
-            const pathToPlural = path.resolve(resPath, __dirname, 'plural', path.basename(resPath));
+            const resPathDirname = path.dirname(resPath);
+            const resPathBasename = path.basename(resPath);
+            const pathToPlural = path.relative(resPathDirname, path.resolve(__dirname, 'plural', resPathBasename));
             const newV = toPlural(nodeEval(node.value.source()), pathToPlural);
             node.value.update(newV);
         } else if (
